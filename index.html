@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XAI Storefront</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Login View -->
+    <div id="login-view" class="view active">
+        <div class="login-container glass">
+            <h1 id="auth-title">🧠 XAI E-Commerce</h1>
+            <form id="login-form">
+                <input type="email" id="email" placeholder="Email" value="" required>
+                <div style="position: relative; width: 100%;">
+                    <input type="password" id="password" placeholder="Password" required style="width: 100%; box-sizing: border-box;">
+                    <span id="password-tick" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--success); font-weight: bold; font-size: 18px; display: none; pointer-events: none;">✔</span>
+                </div>
+                <input type="password" id="confirm-password" placeholder="Confirm Password" style="display: none;">
+                <button type="submit" id="auth-btn">Sign In</button>
+                <div style="margin-top: 15px; font-size: 14px; color: var(--text-muted);">
+                    <span id="toggle-text">Don't have an account? </span>
+                    <a href="#" id="toggle-auth" style="color: var(--primary-color); text-decoration: none;">Sign Up</a>
+                </div>
+                <p id="auth-error" style="color: var(--danger); font-size: 14px; margin-top: 15px; display: none; margin-bottom: 0px;"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Verify View -->
+    <div id="verify-view" class="view">
+        <div class="login-container glass">
+            <h1>📧 Verify Email</h1>
+            <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 14px;">We sent a 6-digit code to your email. Check your terminal logs for the code!</p>
+            <form id="verify-form">
+                <input type="text" id="verify-code" placeholder="000000" required style="text-align: center; font-size: 24px; letter-spacing: 5px;">
+                <button type="submit" id="verify-btn">Verify Account</button>
+                <div style="margin-top: 15px; font-size: 14px; color: var(--text-muted); text-align: center;">
+                    <a href="#" id="resend-btn" style="color: var(--primary-color); text-decoration: none; cursor: pointer;">Resend Code</a>
+                    <span id="resend-timer" style="display: none; margin-left: 5px;"></span>
+                </div>
+                <p id="verify-error" style="color: var(--danger); font-size: 14px; margin-top: 15px; display: none; margin-bottom: 0px;"></p>
+                <p id="verify-success" style="color: var(--success); font-size: 14px; margin-top: 15px; display: none; margin-bottom: 0px;"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app-container" class="view">
+        <!-- Fancy Cart Overlay -->
+        <div id="cart-overlay" class="cart-overlay"></div>
+        <div id="cart-drawer" class="cart-drawer glass">
+            <div class="cart-header">
+                <h2>🛒 Your Cart</h2>
+                <button id="close-cart" class="close-btn">&times;</button>
+            </div>
+            <div id="cart-items" class="cart-items">
+                <div class="empty-cart">Your cart is empty.</div>
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cart-total-price">$0.00</span>
+                </div>
+                <div id="paypal-button-container" style="margin-top: 15px; width: 100%; position: relative; z-index: 1000;"></div>
+            </div>
+        </div>
+
+        <nav class="navbar glass">
+            <div class="logo">🧠 XAI Store</div>
+            <div class="search-container">
+                <input type="text" id="search-bar" placeholder="🔍 Search sneakers, brands..." class="search-input">
+            </div>
+            <div class="nav-links modern-nav">
+                <div class="nav-item" id="nav-store" style="cursor: pointer;">
+                    <span>🏪 Storefront</span>
+                </div>
+                <div class="nav-item dropdown" id="nav-profile-container">
+                    <span id="nav-profile" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <img id="nav-avatar" src="https://ui-avatars.com/api/?name=U&background=3b82f6&color=fff&size=40" alt="Profile" style="width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--primary-color); display: block; object-fit: cover; margin: 0;">
+                        Account ▾
+                    </span>
+                    <div class="dropdown-content glass" style="min-width: 120px;">
+                        <a href="#" id="drop-logout" style="color: var(--danger);">🚪 Sign Out</a>
+                    </div>
+                </div>
+                <div class="nav-item nav-cart-item" id="nav-cart">
+                    <span>🛒 Cart</span>
+                    <span id="cart-badge-amz" class="cart-badge">0</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Profile Dashboard View -->
+        <main id="profile-view" class="sub-view">
+            <div class="social-profile-container">
+                <!-- User Social Profile Header -->
+                <div class="social-header glass">
+                    <img id="social-avatar" class="social-avatar" src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff&size=120" alt="Avatar">
+                    <h2 id="social-name" class="social-name">User Name</h2>
+                    <p id="social-email" class="social-email">user@example.com</p>
+                    
+                    <div class="social-stats">
+                        <div class="social-stat">
+                            <span id="social-stat-orders" class="stat-num">0</span>
+                            <span class="stat-label">Orders</span>
+                        </div>
+                        <div class="social-stat">
+                            <span id="social-stat-spent" class="stat-num">$0.00</span>
+                            <span class="stat-label">Total Spent</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile stack containing forms and preferences -->
+                <div class="profile-stack">
+                    <div class="profile-grid">
+                        
+                        <!-- Left Panel: Account Info & Preferences -->
+                        <div style="display: flex; flex-direction: column; gap: 25px;">
+                            <!-- Account Info Form -->
+                            <div class="card glass profile-panel" style="height: auto;">
+                                <div class="panel-header">
+                                    <span class="panel-icon">📋</span>
+                                    <h3 style="margin: 0; font-size: 18px; font-weight: 600; color: var(--text-main);">Account Details</h3>
+                                </div>
+                                <form id="edit-profile-form" class="modern-form">
+                                    <div class="input-group">
+                                        <label for="edit-name">Display Name</label>
+                                        <input type="text" id="edit-name" placeholder="Name" required>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="edit-email">Email Address</label>
+                                        <input type="email" id="edit-email" placeholder="Email" required disabled title="Cannot edit email directly right now">
+                                    </div>
+                                    <div class="input-group" style="margin-top: 10px;">
+                                        <button type="button" class="outline-btn" style="width: 100%;" onclick="alert('Password reset link sent to your email.')">✉️ Reset Password</button>
+                                    </div>
+                                    <div class="form-footer">
+                                        <span id="save-status" class="save-status">✓ Saved automatically</span>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Preferences Panel -->
+                            <div class="card glass profile-panel" style="height: auto;">
+                                <div class="panel-header">
+                                    <span class="panel-icon">⚙️</span>
+                                    <h3 style="margin: 0; font-size: 18px; font-weight: 600; color: var(--text-main);">System Preferences</h3>
+                                </div>
+                                <div class="toggle-group">
+                                    <span>Dark Theme</span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="theme-toggle" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class="toggle-group">
+                                    <span title="Toggles between Control Group (Black-Box) and Experimental Group (Hybrid XAI)">A/B Testing: XAI Insights</span>
+                                    <label class="switch">
+                                        <input type="checkbox" id="xai-toggle" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Transaction History -->
+                        <div style="display: flex; flex-direction: column;">
+                            <div class="card glass profile-panel" style="height: 100%; min-height: 420px;">
+                                <div class="panel-header">
+                                    <span class="panel-icon">📜</span>
+                                    <h3 style="margin: 0; font-size: 18px; font-weight: 600; color: var(--text-main);">Order History</h3>
+                                </div>
+                                <div class="table-responsive" style="flex: 1;">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Item</th>
+                                                <th>Amount</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="transaction-list">
+                                            <tr>
+                                                <td colspan="4" class="loading-state" style="text-align: center; color: var(--text-muted); padding: 20px;">Loading transaction history...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Secure Logout -->
+                    <div class="logout-section">
+                        <button id="logout-btn" class="logout-btn-large">🔒 Secure Logout</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Storefront View -->
+        <main id="storefront-view" class="sub-view active">
+            <!-- Category back bar (shown when a specific category is active) -->
+            <div id="category-back-bar" style="display:none; align-items:center; gap:16px; margin-bottom:28px; padding: 10px 0;">
+                <button id="category-back-btn" title="Back to All Products" style="
+                    position: static;
+                    margin: 0;
+                    width: 42px;
+                    height: 42px;
+                    border-radius: 50%;
+                    border: 1.5px solid rgba(99,102,241,0.45);
+                    background: rgba(99,102,241,0.12);
+                    color: #818cf8;
+                    font-size: 20px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.15s;
+                    box-shadow: 0 2px 12px rgba(99,102,241,0.15);
+                    flex-shrink: 0;
+                " onmouseover="this.style.background='rgba(99,102,241,0.28)';this.style.color='#c7d2fe';this.style.transform='scale(1.08)';" onmouseout="this.style.background='rgba(99,102,241,0.12)';this.style.color='#818cf8';this.style.transform='scale(1)';">&#8592;</button>
+                <h2 id="category-view-title" style="
+                    margin: 0;
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    background: linear-gradient(90deg, #818cf8, #38bdf8);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                    letter-spacing: 0.3px;
+                "></h2>
+            </div>
+
+            <div class="category-filters" style="display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 5px;">
+                <button class="filter-btn active" data-category="All">🌟 All</button>
+                <button class="filter-btn" data-category="Footwear">👟 Footwear</button>
+                <button class="filter-btn" data-category="Accessories">⌚ Accessories</button>
+                <button class="filter-btn" data-category="Electronics">📱 Electronics</button>
+                <button class="filter-btn" data-category="Clothing">👕 Clothing</button>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <button id="open-add-product-modal" class="filter-btn" style="background: rgba(34, 197, 94, 0.15); color: var(--success); border-color: rgba(34, 197, 94, 0.3);">➕ Add Product Manually</button>
+            </div>
+
+            <!-- Recommendations section -->
+            <div id="rec-section">
+                <!-- Removed Model Metrics Banner -->
+                <h2>Recommended For You</h2>
+                <div class="grid recommended-grid" id="recommended-grid"></div>
+                <hr class="divider">
+            </div>
+
+            <!-- All products section -->
+            <div id="all-section">
+                <h2>🛒 All Products</h2>
+                <div class="grid all-grid" id="all-grid"></div>
+            </div>
+        </main>
+
+        <!-- Explanation Modal Overlay -->
+        <div id="explanation-overlay" class="cart-overlay" style="display: none; align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(8px);">
+            <div class="glass" style="width: 90%; max-width: 500px; padding: 30px; position: relative; background: var(--bg-color); border-radius: 16px; border: 1px solid rgba(167, 139, 250, 0.2); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+                <button id="close-explanation" class="close-btn" style="position: absolute; right: 20px; top: 20px;">&times;</button>
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                    <div>
+                        <h2 style="margin: 0; font-size: 22px; color: var(--text-main); background: linear-gradient(90deg, #a78bfa, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Why recommend this?</h2>
+                        <div id="explanation-product-name" style="font-size: 14px; color: var(--text-muted); margin-top: 4px;"></div>
+                    </div>
+                </div>
+                <div id="explanation-content" class="ai-explanation">
+                    Loading explanation...
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div style="background: rgba(0, 0, 0, 0.2); border-radius: 12px; padding: 15px; border: 1px solid rgba(167, 139, 250, 0.15); box-shadow: inset 0 2px 10px rgba(167, 139, 250, 0.05);">
+                        <h4 style="margin: 0 0 10px 0; color: #a78bfa; font-size: 14px; display: flex; align-items: center; gap: 6px;"><span style="font-size: 16px;">📊</span> SHAP <span style="font-size: 11px; color: var(--text-muted); font-weight: normal;">(Global)</span></h4>
+                        <div id="modal-shap-bars" style="min-height: 80px;"></div>
+                    </div>
+                    <div style="background: rgba(0, 0, 0, 0.2); border-radius: 12px; padding: 15px; border: 1px solid rgba(96, 165, 250, 0.15); box-shadow: inset 0 2px 10px rgba(96, 165, 250, 0.05);">
+                        <h4 style="margin: 0 0 10px 0; color: #60a5fa; font-size: 14px; display: flex; align-items: center; gap: 6px;"><span style="font-size: 16px;">📈</span> LIME <span style="font-size: 11px; color: var(--text-muted); font-weight: normal;">(Local)</span></h4>
+                        <div id="modal-lime-bars" style="min-height: 80px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Floating Cart Button -->
+        <div id="floating-cart" class="floating-cart glass">
+            <span style="font-size: 28px;">🛒</span>
+            <span id="cart-badge-floating" class="cart-badge" style="top: -8px; right: -8px; left: auto;">0</span>
+        </div>
+
+        <!-- Add Product Modal Overlay -->
+        <div id="add-product-overlay" class="cart-overlay" style="display: none; align-items: center; justify-content: center; z-index: 2000;">
+            <div class="glass" style="width: 90%; max-width: 500px; padding: 30px; position: relative; background: var(--bg-color);">
+                <button id="close-add-product" class="close-btn" style="position: absolute; right: 20px; top: 20px;">&times;</button>
+                <h2 style="margin-top: 0; margin-bottom: 20px; font-size: 24px;">➕ Add Product</h2>
+                <form id="add-product-form" style="display: flex; flex-direction: column; gap: 15px;">
+                    <input type="file" id="add-product-photo" accept="image/*" required class="search-input" style="border-radius: 8px; padding: 10px; background: rgba(0,0,0,0.4); color: white;">
+                    <input type="text" id="add-product-name" placeholder="Product Name" required class="search-input" style="border-radius: 8px;">
+                    <select id="add-product-category" required class="search-input" style="border-radius: 8px; background-color: var(--card-bg); color: white;">
+                        <option value="" disabled selected>Select Category</option>
+                        <option value="Footwear">Footwear</option>
+                        <option value="Accessories">Accessories</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Clothing">Clothing</option>
+                    </select>
+                    <textarea id="add-product-desc" placeholder="Product Description" rows="4" required class="search-input" style="border-radius: 8px; resize: vertical;"></textarea>
+                    <input type="number" id="add-product-price" placeholder="Price ($)" step="0.01" required class="search-input" style="border-radius: 8px;">
+                    <button type="submit" class="primary-btn">Save Product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
+    <script src="script.js?v=4"></script>
+</body>
+</html>
