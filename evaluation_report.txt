@@ -1,0 +1,30 @@
+============================================================
+             CLASSIFICATION MODEL EVALUATION REPORT          
+============================================================
+Model Evaluated : Random Forest Classifier (Storefront backend)
+Evaluation Date : 2026-06-02T21:35:42
+Train Samples   : 80
+Test Samples    : 20
+------------------------------------------------------------
+METRICS SUMMARY:
+  - Accuracy                     : 0.8000 (80.00%)
+  - Precision (Class 1)          : 0.7333 (73.33%)
+  - Recall (Class 1)             : 1.0000 (100.00%)
+  - F1-Score                     : 0.8462 (84.62%)
+  - Matthews Correlation (MCC)   : 0.6383
+------------------------------------------------------------
+CONFUSION MATRIX:
+  True Negative (TN)  : 5      | False Positive (FP) : 4
+  False Negative (FN) : 0      | True Positive (TP)  : 11
+------------------------------------------------------------
+CLASSIFICATION REPORT DETAIL:
+              precision    recall  f1-score   support
+
+           0       1.00      0.56      0.71         9
+           1       0.73      1.00      0.85        11
+
+    accuracy                           0.80        20
+   macro avg       0.87      0.78      0.78        20
+weighted avg       0.85      0.80      0.79        20
+
+============================================================
